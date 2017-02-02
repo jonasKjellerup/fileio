@@ -4,6 +4,8 @@ it adds two main objects, for storing file and directory references.
 The library also contains wrappers for all, callback-based, asynchronous functions 
 in the *fs* module.
 
+*Documentation can be found at [https://jonaskjellerup.github.io/fileio/File.html](https://jonaskjellerup.github.io/fileio/File.html)*.
+
 ## Instalation
 Run this command in your prefered terminal emulator.
 ```
