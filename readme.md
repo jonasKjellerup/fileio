@@ -16,7 +16,7 @@ which is suffixed with *"-Async"*, so instead of ```fs.readFile``` you would use
 The modified fs module, can be accessed at fs export key: ```const {fs} = require('fileio');```
 
 ## File objects
-You can store references to files using the *File* object.
+You can store references to files using the *File* object.  
 *Note: not all the standard file manipulation functions are available, for File objects. Yet.*
 ```
 const {File} = require('fileio');
@@ -33,7 +33,7 @@ file.write('data to be written', false /* <- if set to true the data will also b
 ```
 
 ## Directories
-The directory object allows you to easily read and write files and directories, relative to the objects path.
+The directory object allows you to easily read and write files and directories, relative to the objects path.  
 *Note: not all the standard directory manipulation functions are available, for Directory objects. Yet.*
 ```
 const {Directory} = require('fileio');
