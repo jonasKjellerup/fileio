@@ -18,7 +18,7 @@ The modified fs module, can be accessed at fs export key: ```const {fs} = requir
 ## File objects
 You can store references to files using the *File* object.  
 *Note: not all the standard file manipulation functions are available, for File objects. Yet.*
-```
+```javascript
 const {File} = require('fileio');
 
 const file = new File('/Path/to/file/textfile.txt');
@@ -35,7 +35,7 @@ file.write('data to be written', false /* <- if set to true the data will also b
 ## Directories
 The directory object allows you to easily read and write files and directories, relative to the objects path.  
 *Note: not all the standard directory manipulation functions are available, for Directory objects. Yet.*
-```
+```javascript
 const {Directory} = require('fileio');
 
 const dir1 = new Directory('./dir1');
