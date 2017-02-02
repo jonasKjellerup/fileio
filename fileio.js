@@ -2,11 +2,32 @@ const Promise = require('bluebird');
 const path = require('path');
 const fs = require('fs');
 
+/**
+ * A refeference to a file.
+ * @constructor
+ * @argument {string} filepath - The path of the file.
+ */
 function File(filepath) {
+
+	/**
+	 * The path of the file.
+	 * @type {string}
+	 */
 	this.path = path.resolve(filepath);
+
+	/**
+	 * The file cache for storing read data
+	 * @type {null|string|Buffer}
+	 */
 	this.cache = null;
 }
 
+/**
+ * Reads the file.<br/>
+ * Promise resolves to the data read by fs.readFile, and rejects to the err from the function.
+ * @argument {Boolean} [cache=false] - If the data read should be saved in the File#cache
+ * @return {Promise} - resolve => data : reject => error
+ */
 File.prototype.read = function (cache) {
 	if (typeof cache === 'undefined') cache = false;
 	let $ = this;
@@ -19,6 +40,13 @@ File.prototype.read = function (cache) {
 	} );
 };
 
+/**
+ * Writes data to the file.<br />
+ * Promise resolves to the file object itself, and rejects to the err from the fs.writeFile function.
+ * @argument {Buffer|string} data - The data that is to written to the file.
+ * @argument {Boolean} [cache=false] - Whether or not the data written should be save to the File#cache variable.
+ * @return {Promise} - resolve => this : reject => error
+ */
 File.prototype.write = function (data, cache) {
 	if (typeof data !== 'string' && !(data instanceof Buffer))
 	throw new TypeError('Expected first argument in File#write to be of type string or Buffer' +
@@ -34,6 +62,12 @@ File.prototype.write = function (data, cache) {
 	} );
 };
 
+/**
+ * Copies the file to a specified target destination.<br />
+ * Promise resolves to the file representing the origin of the data, and rejects to any error thrown by the write/read streams.
+ * @argument {string|File} target - The target path of the function.
+ * @return {Promise} - resolve => this : reject => error
+ */
 File.prototype.copyTo = function (target) {
 	let $, self = this;
 
@@ -54,10 +88,22 @@ File.prototype.copyTo = function (target) {
 	} );
 };
 
+/**
+ * Moves the file to a specified target destination.<br />
+ * Promise resolves to the file object on which the function was called on, and rejects to any errors encountered along the path.<br />
+ * The function modifies the original object to contain the new path.
+ * @argument {string|File} target - The target destination.
+ * @return {Promise} - resolve => this : reject => error.
+ */
 File.prototype.moveTo = function (target) {
 	return this.copyTo(target).then($ => $.remove()).then($ => ($.path = target.path || target, $));
 }
 
+/**
+ * Removes/unlinks the file.<br />
+ * Promise resolves to the file object, and rejects to error.
+ * @return {Promise} - resolve => this : reject => error.
+ */
 File.prototype.remove = function () {
 	let $ = this;
 	return new Promise( (resolve, reject) => {
@@ -68,6 +114,13 @@ File.prototype.remove = function () {
 	} );
 };
 
+/**
+ * Appends data to the file. <br />
+ * Promise resolves to the file object, and rejects to error.
+ * @argument {string|Buffer} data - The data to be appended to the file.
+ * @argument {boolean} [cache=false] - Whether the appended data should be appended to the current cache, if present.
+ * @return {Promise} - resolve => this : reject => error.
+ */
 File.prototype.append = function (data, cache) {
 	let $ = this;
 	cache = cache || false;
