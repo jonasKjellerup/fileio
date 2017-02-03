@@ -22,5 +22,8 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.4.7"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.4.3"
   }
 }
