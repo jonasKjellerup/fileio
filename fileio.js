@@ -1,6 +1,6 @@
-const Promise = require('bluebird');
-const path = require('path');
-const fs = require('fs');
+var Promise = require('bluebird');
+var path = require('path');
+var fs = require('fs');
 
 /**
  * A refeference to a file.
@@ -30,9 +30,9 @@ function File(filepath) {
  */
 File.prototype.read = function (cache) {
 	if (typeof cache === 'undefined') cache = false;
-	let $ = this;
-	return new Promise( (resolve, reject) => {
-		fs.readFile($.path, (err, data) => {
+	var $ = this;
+	return new Promise( function (resolve, reject) {
+		fs.readFile($.path, function (err, data) {
 			if (err) return reject(err);
 			if (cache) $.cache = data;
 			resolve(data);
@@ -52,8 +52,8 @@ File.prototype.write = function (data, cache) {
 	throw new TypeError('Expected first argument in File#write to be of type string or Buffer' +
 		' received: ' + typeof data);
 	if (typeof cache === 'undefined') cache = false;
-	let $ = this;
-	return new Promise( (resolve, reject ) => {
+	var $ = this;
+	return new Promise( function (resolve, reject ) {
 		fs.writeFile($.path, data, function (err) {
 			if (err) return reject(err);
 			if (cache) $.cache = data;
@@ -69,7 +69,7 @@ File.prototype.write = function (data, cache) {
  * @return {Promise} - resolve => this : reject => error
  */
 File.prototype.copyTo = function (target) {
-	let $, self = this;
+	var $, self = this;
 
 	if (target instanceof File)
 		$ = target.path;
@@ -77,13 +77,13 @@ File.prototype.copyTo = function (target) {
 		$ = target;
 	else throw new TypeError('Invalid type of target in File#copyTo expected string or File.');
 
-	let inStream = fs.createReadStream(this.path);
-	let outStream = fs.createWriteStream($);
+	var inStream = fs.createReadStream(this.path);
+	var outStream = fs.createWriteStream($);
 
-	return new Promise( (resolve, reject) => {
+	return new Promise( function (resolve, reject) {
 		inStream.on('error', reject);
 		outStream.on('error', reject);
-		outStream.on('close', () => resolve(self));
+		outStream.on('close', function () { resolve(self); });
 		inStream.pipe(outStream);
 	} );
 };
@@ -96,7 +96,7 @@ File.prototype.copyTo = function (target) {
  * @return {Promise} - resolve => this : reject => error.
  */
 File.prototype.moveTo = function (target) {
-	return this.copyTo(target).then($ => $.remove()).then($ => ($.path = target.path || target, $));
+	return this.copyTo(target).then(function ($) { return $.remove() }).then(function ($) { return ($.path = target.path || target, $)});
 }
 
 /**
@@ -105,9 +105,9 @@ File.prototype.moveTo = function (target) {
  * @return {Promise} - resolve => this : reject => error.
  */
 File.prototype.remove = function () {
-	let $ = this;
-	return new Promise( (resolve, reject) => {
-		fs.unlink($.path, (err) => {
+	var $ = this;
+	return new Promise( function (resolve, reject) {
+		fs.unlink($.path, function (err) {
 			if (err) return reject(err);
 			resolve($);
 		});
@@ -122,10 +122,10 @@ File.prototype.remove = function () {
  * @return {Promise} - resolve => this : reject => error.
  */
 File.prototype.append = function (data, cache) {
-	let $ = this;
+	var $ = this;
 	cache = cache || false;
-	return new Promise( (resolve, reject) => {
-		fs.appendFile($.path, data, (err) => {
+	return new Promise( function (resolve, reject) {
+		fs.appendFile($.path, data, function (err) {
 			if (err) return reject(err);
 			else {
 				if (cache && $.cache) $.cache += data;
@@ -135,41 +135,62 @@ File.prototype.append = function (data, cache) {
 	} );
 };
 
+/**
+ * Appends the data from a specified file. <br />
+ * Promise resolves to the file object, and rejects to error.
+ * @argument {string|File} file - The file that is to be appended.
+ * @argument {boolean} [cache=false] - Whether the appended file should be appended to the current cache, if present.
+ * @return {Promise} - resolve => this : reject => error.
+ */
 File.prototype.appendFile = function (file, cache) {
-	let data, $ = this;
+	var data, $ = this;
 	if (file instanceof File) {
 		if (file.cache) data = file.cache;
-		else return file.read().then( data => $.append(data, cache) );
+		else return file.read().then( function (data) { return $.append(data, cache); } );
 	} else if (typeof file === 'string') {
-		let f = new File(file);
-		return f.read().then( data => $.append(data, cache) );
+		var f = new File(file);
+		return f.read().then( function (data) { return $.append(data, cache); } );
 	} else new TypeError('Invalid type of file in File#appendFile expected string or File');
 };
 
+/**
+ * Gets the stats of the file.
+ * @return {Promise} - resolve => filestats : reject => error.
+ */
 File.prototype.stat = function () {
-	let $ = this;
-	return new Promise( ( resolve, reject ) => {
-		fs.stat($.path, (err, stats) => {
+	var $ = this;
+	return new Promise( function ( resolve, reject ) {
+		fs.stat($.path, function (err, stats) {
 			if (err) return reject(err);
 			else resolve(stats);
 		});
 	} );
 };
 
+/**
+ * Gets the size of the file.
+ * @argument {number} [outputFormat=0] - The format of the number returned: bytes=0, kilobytes=1, megabyte=2 ...
+ * @return {Promise} - resolve => filesize : reject => error.
+ */
 File.prototype.getSize = function (outputFormat) {
 	if (!outputFormat || typeof outputFormat !== 'number') outputFormat = 0;
-	return new Promise ( ( resolve, reject ) => {
-		$.stat().then(stats => {
-			resolve(stats['size']/math.pow(10, 3 * outputFormat));
+	return new Promise ( function ( resolve, reject ) {
+		$.stat().then( function (stats) {
+			resolve(stats['size']/Math.pow(10, 3 * outputFormat));
 		}).catch(reject);
 	} );
 };
 
+/**
+ * Creates a link to the file.
+ * @argument {string} path - The destination path of the link.
+ * @return {Promise} - resolve => this : reject => error.
+ */
 File.prototype.link = function (path) {
-	let $ = this;
+	var $ = this;
 	if (typeof path !== string) throw new TypeError('Expected path in File#link to be of type string');
-	return new Promise( ( resolve, reject ) => {
-		fs.link( $.path, path, ( err ) => {
+	return new Promise( function ( resolve, reject ) {
+		fs.link( $.path, path, function ( err ) {
 			if (err) return reject(err);
 			resolve($);
 		} );
@@ -181,27 +202,27 @@ function Directory(pathname) {
 }
 
 Directory.prototype.readFile = function (filename) {
-	let $ = new File(path.join(this.path, filename));
-	return $.read(true).then(() => $);
+	var $ = new File(path.join(this.path, filename));
+	return $.read(true).then(function () { return $ });
 };
 
 Directory.prototype.writeFile = function (filename, data, cache) {
-	let $ = new File(path.join(this.path, filename));
+	var $ = new File(path.join(this.path, filename));
     return $.write(data, cache || false);
 };
 
 Directory.prototype.mkdir = function (dirname) {
-	let $ = path.join(this.path, dirname);
+	var $ = path.join(this.path, dirname);
 	return Directory.make($);
 };
 
 Directory.make = function (path) {
-	return new Promise( ( resolve, reject ) => {
-		fs.mkdir(path, err => {
-			if (err) reject(err);
+	return new Promise( function ( resolve, reject ) {
+		fs.mkdir(path, function (err) {
+			if (err) return reject(err);
 			resolve(new Directory(path))
 		});
 	} );
 };
 
-module.exports = {File, Directory, ...Promise.promisifyAll(fs)};
+module.exports = {File, Directory, fs : Promise.promisifyAll(fs)};

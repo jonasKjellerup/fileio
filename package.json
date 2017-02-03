@@ -24,6 +24,7 @@
     "bluebird": "^3.4.7"
   },
   "devDependencies": {
+    "docdash": "^0.4.0",
     "jsdoc": "^3.4.3"
   }
 }
