@@ -237,24 +237,48 @@ Directory.prototype.writeFile = function (filename, data, cache) {
 /**
  * Creates a directory relative to the directories path.
  * @argument {string} dirname - The name of the directory.
+ * @argument {boolean} [recursive=false] - If the directory should be created recursively.
  * @return {Promise} - Resolve => directory : Reject => error
  */
-Directory.prototype.mkdir = function (dirname) {
+Directory.prototype.mkdir = function (dirname, recursive) {
 	var $ = path.join(this.path, dirname);
-	return Directory.make($);
+	return Directory.make($, recursive || false);
 };
 
 /**
  * Makes a directory.
  * @argument {string} path - The path of the directory.
+ * @argument {boolean} [recursive=false] - If the directory should be created recursively.
  * @return {Promise} - Resolve => directory : Reject => error
  */
-Directory.make = function (path) {
+Directory.make = function (dirpath, recursive) {
+	recursive = recursive || false;
 	return new Promise( function ( resolve, reject ) {
-		fs.mkdir(path, function (err) {
-			if (err) return reject(err);
-			resolve(new Directory(path))
-		});
+		if (!recursive) {
+			fs.mkdir(dirpath, function (err) {
+				if (err) return reject(err);
+				resolve(new Directory(dirpath))
+			});
+		} else {
+			var $s = [];
+			function $ ($p) {
+				fs.mkdir($p, function (err) {
+					if (err && err.code === 'ENOENT') {
+						$s.push($p);
+						($p = $p.split('\\')).pop();
+						$p = $p.join('\\');
+						$($p);
+					} else if (err) {
+						reject(err);
+					} else {
+						if ($s.length !== 0) {
+							$($s.pop());
+						} else resolve(new Directory(dirpath));
+					}
+				});
+			}
+			$(path.win32.normalize(dirpath));
+		}
 	} );
 };
 
