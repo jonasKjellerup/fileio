@@ -198,25 +198,57 @@ File.prototype.link = function (path) {
 	} );
 };
 
+/**
+ * References a directory.
+ * @argument {string} pathname - The path to the directory.
+ * @constructor
+ */
 function Directory(pathname) {
+	/**
+	 * The path of the directory.
+	 * @type {string}
+	 */
     this.path = path.resolve(pathname);
 }
 
+/**
+ * Reads a file in the directory. <br />
+ * Data is stored in the objects cache.
+ * @argument {string} filename - The name of the file to read.
+ * @return {Promise} - Resolve => file : Reject => error
+ */
 Directory.prototype.readFile = function (filename) {
 	var $ = new File(path.join(this.path, filename));
 	return $.read(true).then(function () { return $ });
 };
 
+/**
+ * Writes a file in the directory.
+ * @argument {string} filename - The name of the file to write to.
+ * @argument {string|buffer} data - The data to write.
+ * @argument {boolean} [cache=false] - whether or not the function should cache the written data.
+ * @return {Promise} - Resolve => file : Reject => error
+ */
 Directory.prototype.writeFile = function (filename, data, cache) {
 	var $ = new File(path.join(this.path, filename));
     return $.write(data, cache || false);
 };
 
+/**
+ * Creates a directory relative to the directories path.
+ * @argument {string} dirname - The name of the directory.
+ * @return {Promise} - Resolve => directory : Reject => error
+ */
 Directory.prototype.mkdir = function (dirname) {
 	var $ = path.join(this.path, dirname);
 	return Directory.make($);
 };
 
+/**
+ * Makes a directory.
+ * @argument {string} path - The path of the directory.
+ * @return {Promise} - Resolve => directory : Reject => error
+ */
 Directory.make = function (path) {
 	return new Promise( function ( resolve, reject ) {
 		fs.mkdir(path, function (err) {
