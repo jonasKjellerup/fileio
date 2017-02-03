@@ -51,7 +51,7 @@ function main (progress) {
             .catch(function (err) {
                 testoutput['file:append'] = {
                     status: 'error',
-                    result: error
+                    result: err
                 };
                 saveFile();
             });
@@ -67,7 +67,54 @@ function main (progress) {
             .catch(function (err) {
                 testoutput['file:appendFile'] = {
                     status: 'error',
-                    result: error
+                    result: err
+                };
+                saveFile();
+            });
+    }else if (progress === 4) {
+        file.stat()
+            .then(function (stats) {
+                testoutput['file:stats'] = {
+                    status: 'success',
+                    result: stats
+                };
+                main(++progress);
+            })
+            .catch(function (err) {
+                testoutput['file:stats'] = {
+                    status: 'error',
+                    result: err
+                };
+                saveFile();
+            });
+    }else if (progress === 5) {
+        file.getSize(1)
+            .then(function (kb) {
+                testoutput['file:getSize'] = {
+                    status: 'success',
+                    result: kb,
+                    format: 'kilobytes'
+                };
+                main(++progress);
+            }).catch(function (err) {
+                testoutput['file:getSize'] = {
+                    status: 'error',
+                    result: err
+                };
+                saveFile();
+            });
+    }else if (progress === 6) {
+        file.link('./testfiles/link')
+            .then(function (file) {
+                testoutput['file:link'] = {
+                    status: 'success',
+                    result: file
+                };
+                main(++progress);
+            }).catch(function (err) {
+                testoutput['file:link'] = {
+                    status: 'error',
+                    result: err
                 };
                 saveFile();
             });

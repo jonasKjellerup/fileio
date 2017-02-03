@@ -1,1 +1,54 @@
-{"file:write":{"status":"success","result":"testdata: 1234123"},"file:read":{"status":"success","result":{"data":"testdata: 1234123","cache":"testdata: 1234123"}},"file:append":{"status":"success","result":{"cache":"testdata: 1234123\nappend"}},"file:appendFile":{"status":"success","result":{"cache":"testdata: 1234123\nappend\r\n\r\nasdf"}}}
+{
+    "file:write": {
+        "status": "success",
+        "result": "testdata: 1234123"
+    },
+    "file:read": {
+        "status": "success",
+        "result": {
+            "data": "testdata: 1234123",
+            "cache": "testdata: 1234123"
+        }
+    },
+    "file:append": {
+        "status": "success",
+        "result": {
+            "cache": "testdata: 1234123\nappend"
+        }
+    },
+    "file:appendFile": {
+        "status": "success",
+        "result": {
+            "cache": "testdata: 1234123\nappend\r\n\r\nasdf"
+        }
+    },
+    "file:stats": {
+        "status": "success",
+        "result": {
+            "dev": 369304266,
+            "mode": 33206,
+            "nlink": 1,
+            "uid": 0,
+            "gid": 0,
+            "rdev": 0,
+            "ino": 844424930703302,
+            "size": 32,
+            "atime": "2017-02-03T11:02:34.210Z",
+            "mtime": "2017-02-03T12:20:43.918Z",
+            "ctime": "2017-02-03T12:20:43.918Z",
+            "birthtime": "2017-02-03T11:02:34.210Z"
+        }
+    },
+    "file:getSize": {
+        "status": "success",
+        "result": 0.032,
+        "format": "kilobytes"
+    },
+    "file:link": {
+        "status": "success",
+        "result": {
+            "path": "C:\\Users\\jonas\\Desktop\\Library\\fileio\\test\\testfiles\\testfile",
+            "cache": "testdata: 1234123\nappend\r\n\r\nasdf"
+        }
+    }
+}

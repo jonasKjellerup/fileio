@@ -174,10 +174,11 @@ File.prototype.stat = function () {
  */
 File.prototype.getSize = function (outputFormat) {
 	if (!outputFormat || typeof outputFormat !== 'number') outputFormat = 0;
+	var $ = this;
 	return new Promise ( function ( resolve, reject ) {
 		$.stat().then( function (stats) {
 			resolve(stats['size']/Math.pow(10, 3 * outputFormat));
-		}).catch(reject);
+		}, function (err) { reject(err); });
 	} );
 };
 
@@ -188,7 +189,7 @@ File.prototype.getSize = function (outputFormat) {
  */
 File.prototype.link = function (path) {
 	var $ = this;
-	if (typeof path !== string) throw new TypeError('Expected path in File#link to be of type string');
+	if (typeof path !== 'string') throw new TypeError('Expected path in File#link to be of type string');
 	return new Promise( function ( resolve, reject ) {
 		fs.link( $.path, path, function ( err ) {
 			if (err) return reject(err);
