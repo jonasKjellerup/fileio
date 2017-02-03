@@ -1,0 +1,1 @@
+{"file:write":{"status":"success","result":"testdata: 1234123"},"file:read":{"status":"success","result":{"data":"testdata: 1234123","cache":"testdata: 1234123"}},"file:append":{"status":"success","result":{"cache":"testdata: 1234123\nappend"}},"file:appendFile":{"status":"success","result":{"cache":"testdata: 1234123\nappend\r\n\r\nasdf"}}}
