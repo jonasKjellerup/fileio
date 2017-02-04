@@ -35,7 +35,7 @@ file.write('data to be written', false /* <- if set to true the data will also b
 ```
 
 ## Directories
-The directory object allows you to easily read and write files and directories, relative to the objects path.  
+The directory object allows you to easily read and write files, and directories, relative to the objects path.  
 *Note: not all the standard directory manipulation functions are available, for Directory objects. Yet.*
 ```javascript
 const {Directory} = require('fileio');
