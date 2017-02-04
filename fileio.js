@@ -212,6 +212,20 @@ function Directory(pathname) {
 }
 
 /**
+ * Reads the contents of the directory.
+ * @return {Promise} - Resolve => contents : Reject => error
+ */
+Directory.prototype.read = function () {
+	var $ = this;
+	return new Promise(function (resolve, reject) {
+		fs.readdir($.path, function (err, contents) {
+			if (err) return reject(err);
+			resolve(contents);
+		});
+	});
+};
+
+/**
  * Reads a file in the directory. <br />
  * Data is stored in the objects cache.
  * @argument {string} filename - The name of the file to read.
