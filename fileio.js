@@ -25,16 +25,25 @@ function File(filepath) {
 /**
  * Reads the file.<br/>
  * Promise resolves to the data read by fs.readFile, and rejects to the err from the function.
- * @argument {Boolean} [cache=false] - If the data read should be saved in the File#cache
+ * @argument {Object|Boolean|Number} [options=false] - An object containing any options for the function, if given a bool it will be passed along to options.cache and numbers to options.expires.
+ * @argument {Boolean} [options.cache=true] - Whether or not the data read should be saved in File#cache.
+ * @argument {Number} [options.expires=0] - The time in milliseconds untill the cache is cleared, if x > 1 the cache will not be cleared.
  * @return {Promise} - resolve => data : reject => error
  */
-File.prototype.read = function (cache) {
-	if (typeof cache === 'undefined') cache = false;
+File.prototype.read = function (options) {
+	if (typeof options === 'undefined') options = { cache: false };
+	else if (typeof options === 'boolean') options = { cache: options };
+	else if (typeof options === 'number') options = { expires: options };
+	options.expires = options.expires || 0;
+
 	var $ = this;
 	return new Promise( function (resolve, reject) {
 		fs.readFile($.path, function (err, data) {
 			if (err) return reject(err);
-			if (cache) $.cache = data;
+			if (options.cache) $.cache = data;
+			if (options.expires && $.cache) setTimeout(function () {
+				$.cache = '';
+			}, options.expires);
 			resolve(data);
 		});
 	} );
