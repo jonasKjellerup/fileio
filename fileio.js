@@ -5,21 +5,30 @@ var fs = require('fs');
 /**
  * A refeference to a file.
  * @constructor
- * @argument {string} filepath - The path of the file.
+ * @argument {String} filepath - The path of the file.
  */
 function File(filepath) {
 
 	/**
 	 * The path of the file.
-	 * @type {string}
+	 * @type {String}
 	 */
 	this.path = path.resolve(filepath);
 
 	/**
 	 * The file cache for storing read data
-	 * @type {null|string|Buffer}
+	 * @type {null|String|Buffer}
 	 */
 	this.cache = null;
+
+	/**
+	 * Default values when reading or writing the file.
+	 * @type {Object}
+	 */
+	this.defaults = {
+		cache: false,
+		expires: 0
+	}
 }
 
 /**
@@ -31,18 +40,18 @@ function File(filepath) {
  * @return {Promise} - resolve => data : reject => error
  */
 File.prototype.read = function (options) {
-	if (typeof options === 'undefined') options = { cache: false };
-	else if (typeof options === 'boolean') options = { cache: options };
-	else if (typeof options === 'number') options = { expires: options };
-	options.expires = options.expires || 0;
-
 	var $ = this;
+
+	if (typeof options === 'undefined') options = $.defaults;
+	else if (typeof options === 'boolean') options = { cache: $.defaults.cache, cache: options };
+	else if (typeof options === 'number') options = { expires: options , expires: $.defaults.expires};
+
 	return new Promise( function (resolve, reject) {
 		fs.readFile($.path, function (err, data) {
 			if (err) return reject(err);
 			if (options.cache) $.cache = data;
-			if (options.expires && $.cache) setTimeout(function () {
-				$.cache = '';
+			if (options.expires > 0 && $.cache) setTimeout(function () {
+				$.cache = null;
 			}, options.expires);
 			resolve(data);
 		});
