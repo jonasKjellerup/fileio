@@ -34,7 +34,7 @@ function File(filepath) {
 /**
  * Reads the file.<br/>
  * Promise resolves to the data read by fs.readFile, and rejects to the err from the function.
- * @argument {Object|Boolean|Number} [options=false] - An object containing any options for the function, if given a bool it will be passed along to options.cache and numbers to options.expires.
+ * @argument {Object|Boolean|Number} [options=false] - An object containing any options for the operation, if given a bool it will be passed along to options.cache and numbers to options.expires.
  * @argument {Boolean} [options.cache=true] - Whether or not the data read should be saved in File#cache.
  * @argument {Number} [options.expires=0] - The time in milliseconds untill the cache is cleared, if x > 1 the cache will not be cleared.
  * @return {Promise} - resolve => data : reject => error
@@ -49,10 +49,12 @@ File.prototype.read = function (options) {
 	return new Promise( function (resolve, reject) {
 		fs.readFile($.path, function (err, data) {
 			if (err) return reject(err);
-			if (options.cache) $.cache = data;
-			if (options.expires > 0 && $.cache) setTimeout(function () {
-				$.cache = null;
-			}, options.expires);
+			if (options.cache) {
+				$.cache = data;
+				if (options.expires > 0) setTimeout(function () {
+					$.cache = null;
+				}, options.expires);
+			}
 			resolve(data);
 		});
 	} );
@@ -62,19 +64,29 @@ File.prototype.read = function (options) {
  * Writes data to the file.<br />
  * Promise resolves to the file object itself, and rejects to the err from the fs.writeFile function.
  * @argument {Buffer|string} data - The data that is to written to the file.
- * @argument {Boolean} [cache=false] - Whether or not the data written should be save to the File#cache variable.
+ * @argument {Object|Boolean|Number} [options=false] - An object containing any options for the operation, if given a bool it will be passed along to options.cache and numbers to options.expires.
+ * @argument {Boolean} [options.cache=true] - Whether or not the data read should be saved in File#cache.
+ * @argument {Number} [options.expires=0] - The time in milliseconds untill the cache is cleared, if x > 1 the cache will not be cleared.
  * @return {Promise} - resolve => this : reject => error
  */
-File.prototype.write = function (data, cache) {
-	if (typeof data !== 'string' && !(data instanceof Buffer))
-	throw new TypeError('Expected first argument in File#write to be of type string or Buffer' +
-		' received: ' + typeof data);
-	if (typeof cache === 'undefined') cache = false;
+File.prototype.write = function (data, options) {
 	var $ = this;
+	if (typeof data !== 'string' && !(data instanceof Buffer))
+		throw new TypeError('Expected first argument in File#write to be of type string or Buffer' +
+			' received: ' + typeof data);
+	if (typeof options === 'undefined') options = options.defaults;
+	else if (typeof options === 'boolean') options = { cache: $.defaults.cache, cache: options };
+	else if (typeof options === 'number') options = { expires: options , expires: $.defaults.expires};
+	
 	return new Promise( function (resolve, reject ) {
 		fs.writeFile($.path, data, function (err) {
 			if (err) return reject(err);
-			if (cache) $.cache = data;
+			if (options.cache) {
+				$.cache = data;
+				if (options.expires > 0) setTimeout(function () {
+					$.cache = null;
+				}, options.expires);
+			}
 			resolve($);
 		});
 	} );
