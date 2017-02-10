@@ -73,7 +73,7 @@ function File(filepath) {
 /**
  * Reads the file.&lt;br/>
  * Promise resolves to the data read by fs.readFile, and rejects to the err from the function.
- * @argument {Object|Boolean|Number} [options=false] - An object containing any options for the function, if given a bool it will be passed along to options.cache and numbers to options.expires.
+ * @argument {Object|Boolean|Number} [options=false] - An object containing any options for the operation, if given a bool it will be passed along to options.cache and numbers to options.expires.
  * @argument {Boolean} [options.cache=true] - Whether or not the data read should be saved in File#cache.
  * @argument {Number} [options.expires=0] - The time in milliseconds untill the cache is cleared, if x > 1 the cache will not be cleared.
  * @return {Promise} - resolve => data : reject => error
@@ -82,16 +82,18 @@ File.prototype.read = function (options) {
 	var $ = this;
 
 	if (typeof options === 'undefined') options = $.defaults;
-	else if (typeof options === 'boolean') options = { cache: $.defaults.cache, cache: options };
-	else if (typeof options === 'number') options = { expires: options , expires: $.defaults.expires};
+	else if (typeof options === 'boolean') options = { expires: $.defaults.expires, cache: options };
+	else if (typeof options === 'number') options = { expires: options, cache: true};
 
 	return new Promise( function (resolve, reject) {
 		fs.readFile($.path, function (err, data) {
 			if (err) return reject(err);
-			if (options.cache) $.cache = data;
-			if (options.expires > 0 &amp;&amp; $.cache) setTimeout(function () {
-				$.cache = null;
-			}, options.expires);
+			if (options.cache) {
+				$.cache = data;
+				if (options.expires > 0) setTimeout(function () {
+					$.cache = null;
+				}, options.expires);
+			}
 			resolve(data);
 		});
 	} );
@@ -101,19 +103,29 @@ File.prototype.read = function (options) {
  * Writes data to the file.&lt;br />
  * Promise resolves to the file object itself, and rejects to the err from the fs.writeFile function.
  * @argument {Buffer|string} data - The data that is to written to the file.
- * @argument {Boolean} [cache=false] - Whether or not the data written should be save to the File#cache variable.
+ * @argument {Object|Boolean|Number} [options=false] - An object containing any options for the operation, if given a bool it will be passed along to options.cache and numbers to options.expires.
+ * @argument {Boolean} [options.cache=true] - Whether or not the data read should be saved in File#cache.
+ * @argument {Number} [options.expires=0] - The time in milliseconds untill the cache is cleared, if x > 1 the cache will not be cleared.
  * @return {Promise} - resolve => this : reject => error
  */
-File.prototype.write = function (data, cache) {
-	if (typeof data !== 'string' &amp;&amp; !(data instanceof Buffer))
-	throw new TypeError('Expected first argument in File#write to be of type string or Buffer' +
-		' received: ' + typeof data);
-	if (typeof cache === 'undefined') cache = false;
+File.prototype.write = function (data, options) {
 	var $ = this;
+	if (typeof data !== 'string' &amp;&amp; !(data instanceof Buffer))
+		throw new TypeError('Expected first argument in File#write to be of type string or Buffer' +
+			' received: ' + typeof data);
+	if (typeof options === 'undefined') options = $.defaults;
+	else if (typeof options === 'boolean') options = { expires: $.defaults.expires, cache: options };
+	else if (typeof options === 'number') options = { expires: options , cache: true };
+	
 	return new Promise( function (resolve, reject ) {
 		fs.writeFile($.path, data, function (err) {
 			if (err) return reject(err);
-			if (cache) $.cache = data;
+			if (options.cache) {
+				$.cache = data;
+				if (options.expires > 0) setTimeout(function () {
+					$.cache = null;
+				}, options.expires);
+			}
 			resolve($);
 		});
 	} );
@@ -178,14 +190,25 @@ File.prototype.remove = function () {
  * @argument {boolean} [cache=false] - Whether the appended data should be appended to the current cache, if present.
  * @return {Promise} - resolve => this : reject => error.
  */
-File.prototype.append = function (data, cache) {
+File.prototype.append = function (data, options) {
 	var $ = this;
-	cache = cache || false;
+	
+	if (typeof options === 'undefined') options = $.defaults;
+	else if (typeof options === 'boolean') options = { expires: $.defaults.expires, cache: options };
+	else if (typeof options === 'number') options = { expires: options , cache: true };
+
 	return new Promise( function (resolve, reject) {
 		fs.appendFile($.path, data, function (err) {
 			if (err) return reject(err);
 			else {
-				if (cache &amp;&amp; $.cache) $.cache += data;
+				if (options.cache) {
+					$.cache = ($.cache || '') + data;
+					if (options.expires > 0) {
+						setTimeout(function () {
+							$.cache = null;
+						}, options.expires);
+					}
+				}
 				resolve($);
 			}
 		});
@@ -199,15 +222,18 @@ File.prototype.append = function (data, cache) {
  * @argument {boolean} [cache=false] - Whether the appended file should be appended to the current cache, if present.
  * @return {Promise} - resolve => this : reject => error.
  */
-File.prototype.appendFile = function (file, cache) {
+File.prototype.appendFile = function (file, options) {
 	var data, $ = this;
+
+	if (typeof options === 'undefined') options = $.defaults;
+
 	if (file instanceof File) {
 		if (file.cache) data = file.cache;
-		else return file.read().then( function (data) { return $.append(data, cache); } );
+		else return file.read().then( function (data) { return $.append(data, options); } );
 	} else if (typeof file === 'string') {
 		var f = new File(file);
-		return f.read().then( function (data) { return $.append(data, cache); } );
-	} else new TypeError('Invalid type of file in File#appendFile expected string or File');
+		return f.read().then( function (data) { return $.append(data, options); } );
+	} else new TypeError('Invalid type of arguments[0] in File#appendFile expected string or File');
 };
 
 /**
@@ -365,7 +391,7 @@ module.exports = {File, Directory, fs : Promise.promisifyAll(fs)};</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Wed Feb 08 2017 21:32:42 GMT+0100 (Romance Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Feb 10 2017 22:26:48 GMT+0100 (Romance Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
