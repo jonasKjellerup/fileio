@@ -1,10 +1,12 @@
 const File = require('../fileio').File;
 
-const f = new File('file-test.js');
-f.read({
-	cache: true,
-	expires: 6000
-}).then(function () {
-	console.log(f.cache);
-	setTimeout(function () { console.log(f); }, 8000);
-});
+const f = new File('testfiles/appendfile');
+f.defaults = {
+	expires: 6000,
+	cache: true
+};
+
+f.appendFile('testfiles/link').then(function ($) {
+	console.log($);
+	setTimeout(function () {console.log($);}, 6000);
+}).catch(console.log);

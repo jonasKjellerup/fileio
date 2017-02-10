@@ -43,8 +43,8 @@ File.prototype.read = function (options) {
 	var $ = this;
 
 	if (typeof options === 'undefined') options = $.defaults;
-	else if (typeof options === 'boolean') options = { cache: $.defaults.cache, cache: options };
-	else if (typeof options === 'number') options = { expires: options , expires: $.defaults.expires};
+	else if (typeof options === 'boolean') options = { expires: $.defaults.expires, cache: options };
+	else if (typeof options === 'number') options = { expires: options, cache: true};
 
 	return new Promise( function (resolve, reject) {
 		fs.readFile($.path, function (err, data) {
@@ -74,9 +74,9 @@ File.prototype.write = function (data, options) {
 	if (typeof data !== 'string' && !(data instanceof Buffer))
 		throw new TypeError('Expected first argument in File#write to be of type string or Buffer' +
 			' received: ' + typeof data);
-	if (typeof options === 'undefined') options = options.defaults;
-	else if (typeof options === 'boolean') options = { cache: $.defaults.cache, cache: options };
-	else if (typeof options === 'number') options = { expires: options , expires: $.defaults.expires};
+	if (typeof options === 'undefined') options = $.defaults;
+	else if (typeof options === 'boolean') options = { expires: $.defaults.expires, cache: options };
+	else if (typeof options === 'number') options = { expires: options , cache: true };
 	
 	return new Promise( function (resolve, reject ) {
 		fs.writeFile($.path, data, function (err) {
@@ -151,14 +151,25 @@ File.prototype.remove = function () {
  * @argument {boolean} [cache=false] - Whether the appended data should be appended to the current cache, if present.
  * @return {Promise} - resolve => this : reject => error.
  */
-File.prototype.append = function (data, cache) {
+File.prototype.append = function (data, options) {
 	var $ = this;
-	cache = cache || false;
+	
+	if (typeof options === 'undefined') options = $.defaults;
+	else if (typeof options === 'boolean') options = { expires: $.defaults.expires, cache: options };
+	else if (typeof options === 'number') options = { expires: options , cache: true };
+
 	return new Promise( function (resolve, reject) {
 		fs.appendFile($.path, data, function (err) {
 			if (err) return reject(err);
 			else {
-				if (cache && $.cache) $.cache += data;
+				if (options.cache) {
+					$.cache = ($.cache || '') + data;
+					if (options.expires > 0) {
+						setTimeout(function () {
+							$.cache = null;
+						}, options.expires);
+					}
+				}
 				resolve($);
 			}
 		});
@@ -172,15 +183,18 @@ File.prototype.append = function (data, cache) {
  * @argument {boolean} [cache=false] - Whether the appended file should be appended to the current cache, if present.
  * @return {Promise} - resolve => this : reject => error.
  */
-File.prototype.appendFile = function (file, cache) {
+File.prototype.appendFile = function (file, options) {
 	var data, $ = this;
+
+	if (typeof options === 'undefined') options = $.defaults;
+
 	if (file instanceof File) {
 		if (file.cache) data = file.cache;
-		else return file.read().then( function (data) { return $.append(data, cache); } );
+		else return file.read().then( function (data) { return $.append(data, options); } );
 	} else if (typeof file === 'string') {
 		var f = new File(file);
-		return f.read().then( function (data) { return $.append(data, cache); } );
-	} else new TypeError('Invalid type of file in File#appendFile expected string or File');
+		return f.read().then( function (data) { return $.append(data, options); } );
+	} else new TypeError('Invalid type of arguments[0] in File#appendFile expected string or File');
 };
 
 /**
