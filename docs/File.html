@@ -53,7 +53,7 @@
 
     
 
-    <h4 class="name" id="File"><span class="type-signature"></span>new File<span class="signature">(filepath)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="File"><span class="type-signature"></span>new File<span class="signature">(filepath, defaults<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -65,7 +65,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line10">line 10</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line38">line 38</a>
     </li></ul></dd>
     
 
@@ -131,7 +131,11 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -156,10 +160,61 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">The path of the file.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>defaults</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>File.defaultOptions</code>
+                
+                </td>
+            
+
+            <td class="description last">An object specifying default options for the object functions.</td>
         </tr>
 
     
@@ -199,6 +254,79 @@
 
         
             
+<h4 class="name" id=".defaultOptions"><span class="type-signature">(static) </span>defaultOptions<span class="type-signature"> :Object</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line63">line 63</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    The default option values inherited by every File object.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
 <h4 class="name" id="cache"><span class="type-signature"></span>cache<span class="type-signature"> :null|String|Buffer</span></h4>
 
 
@@ -210,7 +338,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line22">line 22</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line50">line 50</a>
     </li></ul></dd>
     
 
@@ -289,7 +417,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line28">line 28</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line56">line 56</a>
     </li></ul></dd>
     
 
@@ -362,7 +490,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line16">line 16</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line44">line 44</a>
     </li></ul></dd>
     
 
@@ -433,7 +561,7 @@
 
     
 
-    <h4 class="name" id="append"><span class="type-signature"></span>append<span class="signature">(data, cache<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="append"><span class="type-signature"></span>append<span class="signature">(data, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
@@ -445,7 +573,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line154">line 154</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line183">line 183</a>
     </li></ul></dd>
     
 
@@ -515,8 +643,6 @@
         
 
         
-        <th>Default</th>
-        
 
         <th class="last">Description</th>
     </tr>
@@ -553,14 +679,72 @@
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
             <td class="description last">The data to be appended to the file.</td>
         </tr>
 
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">Boolean</span>
+|
+
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">An object containing any options for the operation, if given a bool it will be passed along to options.cache and numbers to options.expires.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
@@ -571,7 +755,7 @@
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">Boolean</span>
 
 
             
@@ -592,12 +776,58 @@
             
                 <td class="default">
                 
-                    <code>false</code>
+                    <code>true</code>
                 
                 </td>
             
 
-            <td class="description last">Whether the appended data should be appended to the current cache, if present.</td>
+            <td class="description last">Whether or not the data read should be saved in File#cache.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>expires</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>0</code>
+                
+                </td>
+            
+
+            <td class="description last">The time in milliseconds untill the cache is cleared, if x > 1 the cache will not be cleared.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -646,7 +876,7 @@
 
     
 
-    <h4 class="name" id="appendFile"><span class="type-signature"></span>appendFile<span class="signature">(file, cache<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="appendFile"><span class="type-signature"></span>appendFile<span class="signature">(file, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
@@ -658,7 +888,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line186">line 186</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line215">line 215</a>
     </li></ul></dd>
     
 
@@ -728,8 +958,6 @@
         
 
         
-        <th>Default</th>
-        
 
         <th class="last">Description</th>
     </tr>
@@ -766,14 +994,72 @@
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
             <td class="description last">The file that is to be appended.</td>
         </tr>
 
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">Boolean</span>
+|
+
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">An object containing any options for the operation, if given a bool it will be passed along to options.cache and numbers to options.expires.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
@@ -784,7 +1070,7 @@
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">Boolean</span>
 
 
             
@@ -805,12 +1091,58 @@
             
                 <td class="default">
                 
-                    <code>false</code>
+                    <code>true</code>
                 
                 </td>
             
 
-            <td class="description last">Whether the appended file should be appended to the current cache, if present.</td>
+            <td class="description last">Whether or not the data read should be saved in File#cache.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>expires</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>0</code>
+                
+                </td>
+            
+
+            <td class="description last">The time in milliseconds untill the cache is cleared, if x > 1 the cache will not be cleared.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -871,7 +1203,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line101">line 101</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line128">line 128</a>
     </li></ul></dd>
     
 
@@ -1029,7 +1361,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line219">line 219</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line248">line 248</a>
     </li></ul></dd>
     
 
@@ -1204,7 +1536,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line234">line 234</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line263">line 263</a>
     </li></ul></dd>
     
 
@@ -1359,7 +1691,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line128">line 128</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line155">line 155</a>
     </li></ul></dd>
     
 
@@ -1517,7 +1849,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line42">line 42</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line76">line 76</a>
     </li></ul></dd>
     
 
@@ -1587,8 +1919,6 @@
         
 
         
-        <th>Default</th>
-        
 
         <th class="last">Description</th>
     </tr>
@@ -1629,12 +1959,6 @@
                 </td>
             
 
-            
-                <td class="default">
-                
-                    <code>false</code>
-                
-                </td>
             
 
             <td class="description last">An object containing any options for the operation, if given a bool it will be passed along to options.cache and numbers to options.expires.
@@ -1806,7 +2130,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line137">line 137</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line164">line 164</a>
     </li></ul></dd>
     
 
@@ -1912,7 +2236,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line204">line 204</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line233">line 233</a>
     </li></ul></dd>
     
 
@@ -2018,7 +2342,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line72">line 72</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line104">line 104</a>
     </li></ul></dd>
     
 
@@ -2088,8 +2412,6 @@
         
 
         
-        <th>Default</th>
-        
 
         <th class="last">Description</th>
     </tr>
@@ -2125,10 +2447,6 @@
                 </td>
             
 
-            
-                <td class="default">
-                
-                </td>
             
 
             <td class="description last">The data that is to written to the file.</td>
@@ -2168,12 +2486,6 @@
                 </td>
             
 
-            
-                <td class="default">
-                
-                    <code>false</code>
-                
-                </td>
             
 
             <td class="description last">An object containing any options for the operation, if given a bool it will be passed along to options.cache and numbers to options.expires.
@@ -2346,7 +2658,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Feb 10 2017 22:26:48 GMT+0100 (Romance Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Mon Feb 13 2017 16:08:01 GMT+0100 (Romance Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
