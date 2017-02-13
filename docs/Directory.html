@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Directory.html">Directory</a><ul class='methods'><li data-type='method'><a href="Directory.html#.make">make</a></li><li data-type='method'><a href="Directory.html#mkdir">mkdir</a></li><li data-type='method'><a href="Directory.html#read">read</a></li><li data-type='method'><a href="Directory.html#readFile">readFile</a></li><li data-type='method'><a href="Directory.html#writeFile">writeFile</a></li></ul></li><li><a href="File.html">File</a><ul class='methods'><li data-type='method'><a href="File.html#append">append</a></li><li data-type='method'><a href="File.html#appendFile">appendFile</a></li><li data-type='method'><a href="File.html#copyTo">copyTo</a></li><li data-type='method'><a href="File.html#getSize">getSize</a></li><li data-type='method'><a href="File.html#link">link</a></li><li data-type='method'><a href="File.html#moveTo">moveTo</a></li><li data-type='method'><a href="File.html#read">read</a></li><li data-type='method'><a href="File.html#remove">remove</a></li><li data-type='method'><a href="File.html#stat">stat</a></li><li data-type='method'><a href="File.html#write">write</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Directory.html">Directory</a><ul class='methods'><li data-type='method'><a href="Directory.html#.make">make</a></li><li data-type='method'><a href="Directory.html#getFileReference">getFileReference</a></li><li data-type='method'><a href="Directory.html#mkdir">mkdir</a></li><li data-type='method'><a href="Directory.html#read">read</a></li><li data-type='method'><a href="Directory.html#readFile">readFile</a></li><li data-type='method'><a href="Directory.html#writeFile">writeFile</a></li></ul></li><li><a href="File.html">File</a><ul class='methods'><li data-type='method'><a href="File.html#append">append</a></li><li data-type='method'><a href="File.html#appendFile">appendFile</a></li><li data-type='method'><a href="File.html#copyTo">copyTo</a></li><li data-type='method'><a href="File.html#getSize">getSize</a></li><li data-type='method'><a href="File.html#link">link</a></li><li data-type='method'><a href="File.html#moveTo">moveTo</a></li><li data-type='method'><a href="File.html#read">read</a></li><li data-type='method'><a href="File.html#remove">remove</a></li><li data-type='method'><a href="File.html#stat">stat</a></li><li data-type='method'><a href="File.html#write">write</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -366,7 +366,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line354">line 354</a>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line366">line 366</a>
     </li></ul></dd>
     
 
@@ -551,6 +551,212 @@
     <dd>
         
 <span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getFileReference"><span class="type-signature"></span>getFileReference<span class="signature">(file, inheritOptions<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="File.html">File</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fileio.js.html">fileio.js</a>, <a href="fileio.js.html#line354">line 354</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    Makes a file reference relative to the directory.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>file</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">The file path.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inheritOptions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>true</code>
+                
+                </td>
+            
+
+            <td class="description last">Whether or not the file reference should inherit options, from the directory.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="File.html">File</a></span>
 
 
     </dd>
@@ -1296,7 +1502,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Mon Feb 13 2017 16:08:01 GMT+0100 (Romance Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Mon Feb 13 2017 18:59:47 GMT+0100 (Romance Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

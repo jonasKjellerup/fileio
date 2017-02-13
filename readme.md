@@ -58,6 +58,8 @@ function main( directoryObject ) {
 ```
 
 ## Changelog
+* 2.1.0
+    * Added Director#getFileReference
 * 2.0.0
     * __BREAKING__: Changed Directory#readFile to resolve to an array - [file, data].
     * Added support for default options on all File operations.

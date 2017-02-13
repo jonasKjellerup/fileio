@@ -346,6 +346,18 @@ Directory.prototype.mkdir = function (dirname, recursive) {
 };
 
 /**
+ * Makes a file reference relative to the directory.
+ * @argument {string} file - The file path.
+ * @argument {boolean} [inheritOptions=true] - Whether or not the file reference should inherit options, from the directory.
+ * @return {File}
+ */
+Directory.prototype.getFileReference = function (file, inheritOptions) {
+	var $ = new File(path.join(this.path, file));
+	if (inheritOptions) $.options = this.fileOptions;
+	return $;
+}
+
+/**
  * Makes a directory.
  * @argument {string} path - The path of the directory.
  * @argument {boolean} [recursive=false] - If the directory should be created recursively.
