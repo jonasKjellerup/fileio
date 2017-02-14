@@ -12,7 +12,7 @@ function cloneOptions(o) {
 }
 
 function inspectOptions(options, object) {
-	var output = object.prototype === File.prototype ? cloneOptions(object.options) : cloneOptions(object.fileOptions);
+	var output = object instanceof File ? cloneOptions(object.options) : cloneOptions(object.fileOptions);
 	
 	if (typeof options === 'number') {
 		output.expires = options;
@@ -48,12 +48,14 @@ function File(filepath, defaults) {
 	 * @type {null|String|Buffer}
 	 */
 	this.cache = null;
+	this.cacheTimer = null;
 
 	/**
 	 * Default values when reading or writing the file.
 	 * @type {Object}
 	 */
 	this.defaults = typeof defaults === 'object' ? defaults : cloneOptions(File.defaultOptions);
+
 }
 
 /**
@@ -62,7 +64,9 @@ function File(filepath, defaults) {
  */
 File.defaultOptions = {
 	cache: false,
-	expires: 0
+	expires: 0,
+	fromCache: false,
+	resetTimer: true
 }
 
 /**
@@ -71,20 +75,25 @@ File.defaultOptions = {
  * @argument {Object|Boolean|Number} [options] - An object containing any options for the operation, if given a bool it will be passed along to options.cache and numbers to options.expires.
  * @argument {Boolean} [options.cache=true] - Whether or not the data read should be saved in File#cache.
  * @argument {Number} [options.expires=0] - The time in milliseconds untill the cache is cleared, if x > 1 the cache will not be cleared.
+ * @argument {Boolean} [options.fromCache=false] - If the function should return the contents of the cache instead of reading the file.
+ * @argument {Boolean} [options.resetTimer=true] - If the time should be reset or continue counting.
  * @return {Promise} - resolve => data : reject => error
  */
 File.prototype.read = function (options) {
 	var $ = this;
 
-	options = inspectOptions($);
+	options = inspectOptions(options || $.options, $);
 
 	return new Promise( function (resolve, reject) {
+		if ($.cache !== null) resolve($.cache);
 		fs.readFile($.path, function (err, data) {
 			if (err) return reject(err);
 			if (options.cache) {
 				$.cache = data;
-				if (options.expires > 0) setTimeout(function () {
+				if (options.resetTimer && $.cacheTimer !== null) $.cacheTimer = (clearTimeout($.cacheTimer), null);
+				if (options.expires > 0 && $.cacheTimer === null) $.cacheTimer = setTimeout(function () {
 					$.cache = null;
+					$.cacheTimer = null;
 				}, options.expires);
 			}
 			resolve(data);
@@ -99,19 +108,22 @@ File.prototype.read = function (options) {
  * @argument {Object|Boolean|Number} [options] - An object containing any options for the operation, if given a bool it will be passed along to options.cache and numbers to options.expires.
  * @argument {Boolean} [options.cache=true] - Whether or not the data read should be saved in File#cache.
  * @argument {Number} [options.expires=0] - The time in milliseconds untill the cache is cleared, if x > 1 the cache will not be cleared.
+ * @argument {Boolean} [options.resetTimer=true] - If the time should be reset or continue counting.
  * @return {Promise} - resolve => this : reject => error
  */
 File.prototype.write = function (data, options) {
 	var $ = this;
-	options = inspectOptions($);
+	options = inspectOptions(options || $.options, $);
 	
 	return new Promise( function (resolve, reject ) {
 		fs.writeFile($.path, data, function (err) {
 			if (err) return reject(err);
 			if (options.cache) {
 				$.cache = data;
-				if (options.expires > 0) setTimeout(function () {
+				if (options.resetTimer && $.cacheTimer !== null) $.cacheTimer = (clearTimeout($.cacheTimer), null);
+				if (options.expires > 0 && $.cacheTimer === null) $.cacheTimer = setTimeout(function () {
 					$.cache = null;
+					$.cacheTimer = null;
 				}, options.expires);
 			}
 			resolve($);
@@ -178,12 +190,13 @@ File.prototype.remove = function () {
  * @argument {Object|Boolean|Number} [options] - An object containing any options for the operation, if given a bool it will be passed along to options.cache and numbers to options.expires.
  * @argument {Boolean} [options.cache=true] - Whether or not the data read should be saved in File#cache.
  * @argument {Number} [options.expires=0] - The time in milliseconds untill the cache is cleared, if x > 1 the cache will not be cleared.
+ * @argument {Boolean} [options.resetTimer=true] - If the time should be reset or continue counting.
  * @return {Promise} - resolve => this : reject => error.
  */
 File.prototype.append = function (data, options) {
 	var $ = this;
 	
-	options = inspectOptions($);
+	options = options = inspectOptions(options || $.options, $);
 
 	return new Promise( function (resolve, reject) {
 		fs.appendFile($.path, data, function (err) {
@@ -191,11 +204,11 @@ File.prototype.append = function (data, options) {
 			else {
 				if (options.cache) {
 					$.cache = ($.cache || '') + data;
-					if (options.expires > 0) {
-						setTimeout(function () {
-							$.cache = null;
-						}, options.expires);
-					}
+					if (options.resetTimer && $.cacheTimer !== null) $.cacheTimer = (clearTimeout($.cacheTimer), null);
+					if (options.expires > 0 && $.cacheTimer === null) $.cacheTimer = setTimeout(function () {
+						$.cache = null;
+						$.cacheTimer = null;
+					}, options.expires);
 				}
 				resolve($);
 			}
@@ -210,6 +223,7 @@ File.prototype.append = function (data, options) {
  * @argument {Object|Boolean|Number} [options] - An object containing any options for the operation, if given a bool it will be passed along to options.cache and numbers to options.expires.
  * @argument {Boolean} [options.cache=true] - Whether or not the data read should be saved in File#cache.
  * @argument {Number} [options.expires=0] - The time in milliseconds untill the cache is cleared, if x > 1 the cache will not be cleared.
+ * @argument {Boolean} [options.resetTimer=true] - If the time should be reset or continue counting.
  * @return {Promise} - resolve => this : reject => error.
  */
 File.prototype.appendFile = function (file, options) {
@@ -289,7 +303,9 @@ function Directory(pathname) {
 	 */
 	this.fileOptions = {
 		cache: false,
-		expires: 0
+		expires: 0,
+		fromCache: false,
+		resetTimer: true
 	};
 }
 

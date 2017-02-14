@@ -58,6 +58,10 @@ function main( directoryObject ) {
 ```
 
 ## Changelog
+* 2.2.0
+    * Added fromCache option on file read allowing reading from cache, instead of fs.
+    * Added resetTimer option for specifying, if the timer should contiue or start over on the next read/write/...
+    * Multiple bug fixes.
 * 2.1.0
     * Added Directory#getFileReference
 * 2.0.0
