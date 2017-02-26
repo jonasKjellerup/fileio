@@ -12,7 +12,7 @@ function cloneOptions(o) {
 }
 
 function inspectOptions(options, object) {
-	var output = object instanceof File ? cloneOptions(object.options) : cloneOptions(object.fileOptions);
+	var output = object instanceof File ? cloneOptions(object.defaults) : cloneOptions(object.fileOptions);
 	
 	if (typeof options === 'number') {
 		output.expires = options;
